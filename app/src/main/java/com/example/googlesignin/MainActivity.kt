@@ -11,7 +11,6 @@ import com.example.googlesignin.models.SignInResult
 class MainActivity : AppCompatActivity(), ISignInResult {
 
     private lateinit var binding: ActivityMainBinding
-
     var googleSinIn: GoogleSignIn? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,6 +51,6 @@ class MainActivity : AppCompatActivity(), ISignInResult {
     }
 
     override fun onNothingHappened() {
-        TODO("Not yet implemented")
+
     }
 }

@@ -2,13 +2,18 @@ package com.example.googlesignin
 
 import android.app.Activity
 import android.content.Intent
+import android.content.IntentSender
 import com.example.googlesignin.listener.ISignInResult
 import com.example.googlesignin.models.SignInResult
+import com.google.android.gms.auth.api.identity.BeginSignInRequest
+import com.google.android.gms.auth.api.identity.BeginSignInResult
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
-import io.mockk.*
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.spyk
 import org.junit.Before
 import org.junit.Test
 
@@ -21,12 +26,16 @@ class GoogleSignInTest {
     lateinit var data: Intent
     lateinit var oneTapClient: SignInClient
     lateinit var signInResult: SignInResult
+    lateinit var signInRequest: BeginSignInRequest
+    lateinit var result: BeginSignInResult
     @Before
     fun before() {
         activiy = mockk()
         inResult = spyk()
         data = mockk()
         oneTapClient = mockk()
+        signInRequest = mockk()
+        result = mockk()
         googleSignIn = GoogleSignIn(activiy, "", inResult)
         signInResult = SignInResult(
             BuildConfig.testToken, "Milad", "",
@@ -56,10 +65,18 @@ class GoogleSignInTest {
     }
 
     @Test
-    fun `return an NetworkError(#7) exception`() {
+    fun `return other ApiException exception`() {
         val apiException = ApiException(Status.RESULT_TIMEOUT)
         every { googleSignIn.parseActivityResult( data) } throws apiException
         googleSignIn.parseActivityResult(data)
         coVerify { inResult.onGotAnException(apiException) }
+    }
+
+    @Test
+    fun `return SendIntentException on signIn()`() {
+        val sendIntentException = IntentSender.SendIntentException()
+        every { googleSignIn.onSuccessToShowGoogleSignIn(result, activiy) } throws sendIntentException
+        googleSignIn.onSuccessToShowGoogleSignIn(result, activiy)
+        coVerify { inResult.onGotAnException(sendIntentException) }
     }
 }

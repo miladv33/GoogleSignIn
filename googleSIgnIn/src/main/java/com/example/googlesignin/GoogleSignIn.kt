@@ -3,10 +3,10 @@ package com.example.googlesignin
 import android.app.Activity
 import android.content.Intent
 import android.content.IntentSender
-import android.util.Log
 import com.example.googlesignin.listener.ISignInResult
 import com.example.googlesignin.models.SignInResult
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
+import com.google.android.gms.auth.api.identity.BeginSignInResult
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.gms.common.api.ApiException
@@ -18,7 +18,6 @@ class GoogleSignIn constructor(
     var iSignInResult: ISignInResult
 ) {
 
-    private val TAG: String = "GoogleSignIn"
     private val REQ_ONE_TAP: Int = 100
     private var oneTapClient: SignInClient? = null
     private var signInRequest: BeginSignInRequest? = null
@@ -45,25 +44,36 @@ class GoogleSignIn constructor(
             .build()
     }
 
+
     fun signIn() {
         signInRequest?.let { signInRequest ->
             oneTapClient?.beginSignIn(signInRequest)
                 ?.addOnSuccessListener(activiy) { result ->
-                    try {
-                        activiy.startIntentSenderForResult(
-                            result.pendingIntent.intentSender, REQ_ONE_TAP,
-                            null, 0, 0, 0, null
-                        )
-                    } catch (e: IntentSender.SendIntentException) {
-                        iSignInResult.onGotAnException(e)
-                    }
+                    onSuccessToShowGoogleSignIn(result, activiy)
                 }
                 ?.addOnFailureListener(activiy) { e ->
                     iSignInResult.onGotAnException(e)
-                    // No saved credentials found. Launch the One Tap sign-up flow, or
-                    // do nothing and continue presenting the signed-out UI.
+
                 }
         }
+    }
+
+    fun onSuccessToShowGoogleSignIn(result: BeginSignInResult, activiy: Activity) {
+        try {
+            startIntent(activiy, result)
+        } catch (e: IntentSender.SendIntentException) {
+            iSignInResult.onGotAnException(e)
+        }
+    }
+
+    private fun startIntent(
+        activiy: Activity,
+        result: BeginSignInResult
+    ) {
+        activiy.startIntentSenderForResult(
+            result.pendingIntent.intentSender, REQ_ONE_TAP,
+            null, 0, 0, 0, null
+        )
     }
 
     fun onActivityResult(requestCode: Int, data: Intent?) {
@@ -116,4 +126,6 @@ class GoogleSignIn constructor(
         }
         return null
     }
+
+
 }
