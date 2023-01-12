@@ -1,0 +1,79 @@
+Index: googleSIgnIn/src/test/java/com/example/googlesignin/GoogleSignInTest.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.googlesignin\r\n\r\nimport android.app.Activity\r\nimport android.content.Intent\r\nimport android.content.IntentSender\r\nimport com.example.googlesignin.listener.ISignInResult\r\nimport com.example.googlesignin.models.SignInResult\r\nimport com.google.android.gms.auth.api.identity.BeginSignInRequest\r\nimport com.google.android.gms.auth.api.identity.BeginSignInResult\r\nimport com.google.android.gms.auth.api.identity.SignInClient\r\nimport com.google.android.gms.common.api.ApiException\r\nimport com.google.android.gms.common.api.Status\r\nimport io.mockk.coVerify\r\nimport io.mockk.every\r\nimport io.mockk.mockk\r\nimport io.mockk.spyk\r\nimport org.junit.Before\r\nimport org.junit.Test\r\n\r\nclass GoogleSignInTest {\r\n\r\n    @io.mockk.impl.annotations.MockK\r\n    lateinit var googleSignIn: GoogleSignIn\r\n    lateinit var inResult: ISignInResult\r\n    lateinit var activiy: Activity\r\n    lateinit var data: Intent\r\n    lateinit var oneTapClient: SignInClient\r\n    lateinit var signInResult: SignInResult\r\n    lateinit var signInRequest: BeginSignInRequest\r\n    lateinit var result: BeginSignInResult\r\n    @Before\r\n    fun before() {\r\n        activiy = mockk(relaxed = true)\r\n        inResult = spyk()\r\n        data = mockk()\r\n        oneTapClient = mockk()\r\n        signInRequest = mockk()\r\n        result = mockk(relaxed = true)\r\n        googleSignIn = spyk( GoogleSignIn(activiy, \"\", inResult), recordPrivateCalls = true)\r\n        signInResult = SignInResult(\r\n            BuildConfig.testToken, \"Milad\", \"\",\r\n            mockk(),  \"Milad Varvaei\", \"Varvaei\", \"Milad\", \"+980000000\"\r\n        )\r\n    }\r\n\r\n    @Test\r\n    fun `return result`() {\r\n        every { googleSignIn.getCredential(oneTapClient, data) } returns signInResult\r\n        googleSignIn.setResult(signInResult)\r\n        coVerify { inResult.onGetTheSignInResult(signInResult) }\r\n    }\r\n\r\n    @Test\r\n    fun `return null when asking for credential`() {\r\n        googleSignIn.setResult(null)\r\n        coVerify { inResult.onNothingHappened() }\r\n    }\r\n\r\n    @Test\r\n    fun `return an canceled(#16) exception`() {\r\n        val apiException = ApiException(Status.RESULT_CANCELED)\r\n        every { callPrivate(googleSignIn, \"parseActivityResult\", data) } throws apiException\r\n        every { googleSignIn.parseActivityResult( data) } throws apiException\r\n        googleSignIn.parseActivityResult(data)\r\n        coVerify { inResult.onTheCanceledExceptionHappened() }\r\n    }\r\n\r\n    @Test\r\n    fun `return other ApiException exception`() {\r\n        val apiException = ApiException(Status.RESULT_TIMEOUT)\r\n        every { googleSignIn.parseActivityResult( data) } throws apiException\r\n        googleSignIn.parseActivityResult(data)\r\n        coVerify { inResult.onGotAnException(apiException) }\r\n    }\r\n\r\n    @Test\r\n    fun `return SendIntentException on signIn()`() {\r\n        val sendIntentException = IntentSender.SendIntentException()\r\n        every { googleSignIn.onSuccessToShowGoogleSignIn(result, activiy) } throws sendIntentException\r\n        googleSignIn.onSuccessToShowGoogleSignIn(result, activiy)\r\n        coVerify { inResult.onGotAnException(sendIntentException) }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/googleSIgnIn/src/test/java/com/example/googlesignin/GoogleSignInTest.kt b/googleSIgnIn/src/test/java/com/example/googlesignin/GoogleSignInTest.kt
+--- a/googleSIgnIn/src/test/java/com/example/googlesignin/GoogleSignInTest.kt	(revision 181bdc6cfa153fd97b7b566c74132b0f7d3f1546)
++++ b/googleSIgnIn/src/test/java/com/example/googlesignin/GoogleSignInTest.kt	(date 1673550906509)
+@@ -30,13 +30,13 @@
+     lateinit var result: BeginSignInResult
+     @Before
+     fun before() {
+-        activiy = mockk(relaxed = true)
++        activiy = mockk()
+         inResult = spyk()
+         data = mockk()
+         oneTapClient = mockk()
+         signInRequest = mockk()
+-        result = mockk(relaxed = true)
+-        googleSignIn = spyk( GoogleSignIn(activiy, "", inResult), recordPrivateCalls = true)
++        result = mockk()
++        googleSignIn = GoogleSignIn(activiy, "", inResult)
+         signInResult = SignInResult(
+             BuildConfig.testToken, "Milad", "",
+             mockk(),  "Milad Varvaei", "Varvaei", "Milad", "+980000000"
+@@ -59,7 +59,6 @@
+     @Test
+     fun `return an canceled(#16) exception`() {
+         val apiException = ApiException(Status.RESULT_CANCELED)
+-        every { callPrivate(googleSignIn, "parseActivityResult", data) } throws apiException
+         every { googleSignIn.parseActivityResult( data) } throws apiException
+         googleSignIn.parseActivityResult(data)
+         coVerify { inResult.onTheCanceledExceptionHappened() }
+Index: googleSIgnIn/src/main/java/com/example/googlesignin/listener/IGetIDToken.kt
+===================================================================
+diff --git a/googleSIgnIn/src/main/java/com/example/googlesignin/listener/IGetIDToken.kt b/googleSIgnIn/src/main/java/com/example/googlesignin/listener/IGetIDToken.kt
+deleted file mode 100644
+--- a/googleSIgnIn/src/main/java/com/example/googlesignin/listener/IGetIDToken.kt	(revision 181bdc6cfa153fd97b7b566c74132b0f7d3f1546)
++++ /dev/null	(revision 181bdc6cfa153fd97b7b566c74132b0f7d3f1546)
+@@ -1,7 +0,0 @@
+-package com.example.googlesignin.listener
+-
+-interface IGetIDToken : ISignInResult {
+-    // Got an ID token from Google. Use it to authenticate
+-    // with your backend.
+-    fun onGetIdToken(idToken: String)
+-}
+\ No newline at end of file
+Index: googleSIgnIn/src/main/java/com/example/googlesignin/listener/IGetUserNamePassword.kt
+===================================================================
+diff --git a/googleSIgnIn/src/main/java/com/example/googlesignin/listener/IGetUserNamePassword.kt b/googleSIgnIn/src/main/java/com/example/googlesignin/listener/IGetUserNamePassword.kt
+deleted file mode 100644
+--- a/googleSIgnIn/src/main/java/com/example/googlesignin/listener/IGetUserNamePassword.kt	(revision 181bdc6cfa153fd97b7b566c74132b0f7d3f1546)
++++ /dev/null	(revision 181bdc6cfa153fd97b7b566c74132b0f7d3f1546)
+@@ -1,7 +0,0 @@
+-package com.example.googlesignin.listener
+-
+-interface IGetUserNamePassword : ISignInResult {
+-    // Got a saved username and password. Use them to authenticate
+-    // with your backend.
+-    fun onGetUserNamePassword(userName: String, password: String)
+-}
+\ No newline at end of file
+Index: googleSIgnIn/src/main/java/com/example/googlesignin/listener/INothingHappened.kt
+===================================================================
+diff --git a/googleSIgnIn/src/main/java/com/example/googlesignin/listener/INothingHappened.kt b/googleSIgnIn/src/main/java/com/example/googlesignin/listener/INothingHappened.kt
+deleted file mode 100644
+--- a/googleSIgnIn/src/main/java/com/example/googlesignin/listener/INothingHappened.kt	(revision 181bdc6cfa153fd97b7b566c74132b0f7d3f1546)
++++ /dev/null	(revision 181bdc6cfa153fd97b7b566c74132b0f7d3f1546)
+@@ -1,6 +0,0 @@
+-package com.example.googlesignin.listener
+-
+-interface INothingHappened : ISignInResult {
+-    // Shouldn't happen.
+-    fun onNothingHappened()
+-}
+\ No newline at end of file
