@@ -38,7 +38,7 @@ class GoogleSignInTest {
         result = mockk()
         googleSignIn = GoogleSignIn(activiy, "", inResult)
         signInResult = SignInResult(
-            BuildConfig.testToken, "Milad", "",
+            "", "Milad", "",
             mockk(),  "Milad Varvaei", "Varvaei", "Milad", "+980000000"
         )
     }

@@ -3,8 +3,8 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
-def localProperties = new Properties()
-localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+//def localProperties = new Properties()
+//localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 
 android {
     namespace 'com.example.googlesignin'
@@ -13,7 +13,6 @@ android {
     defaultConfig {
         minSdk 21
         targetSdk 32
-        buildConfigField "String", "testToken", localProperties['testToken']
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
