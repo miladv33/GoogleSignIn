@@ -1,11 +1,11 @@
-# Using Google Sign-In API in your project is easy with this library.
+# A library to use Google Sign-In API  in your project.
 
-The following image shows how Google authentication works 
+Hear is a sample image of how google 
 
 ![](https://developers.google.com/static/identity/sign-in/android/images/google-sign-in.png)
 
 # How to Use it?
-These lines need to be added to your Gradle files
+add thees lines to your gradles
 
 ```   maven { url 'https://jitpack.io' } ```
 
@@ -13,32 +13,10 @@ Then
 
 ```     implementation 'com.github.miladv33:GoogleSIgnIn:1.0.0' ```
 
-Then go to your Activity and follow these steps:
- 
-```
-class MainActivity : AppCompatActivity(), IGetIDToken {
-    var googleSignIn: GoogleSignIn? = null
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        val googleClientId = ""
-        googleSignIn = GoogleSignIn(this, googleClientId, this)
-        googleSignIn?.signIn()
-    }
+then you can see the example of how to use the library in this repository:
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        googleSignIn?.onActivityResult(requestCode, data)
-    }
+[GoogleSampleOfSignIn](https://github.com/miladv33/GoogleSampleOfSignIn)
 
-    override fun onGetIdToken(idToken: String) {
-        Toast.makeText(this, idToken, Toast.LENGTH_LONG).show()
-    }
 
-    override fun onGotAnException(exception: Exception) {
-        Toast.makeText(this, exception.message, Toast.LENGTH_LONG).show()
-    }
-}
-```
 # Note:
-Your client ID can be found in Google Fierbase 
+You should get your client Id from google fierbase 
