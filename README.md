@@ -13,7 +13,7 @@ Then
 
 ```     implementation 'com.github.miladv33:GoogleSIgnIn:1.0.0' ```
 
-then you can see the example of how to use the library in this repository:
+Here is an example of how to use the library:
 
 [GoogleSampleOfSignIn](https://github.com/miladv33/GoogleSampleOfSignIn)
 
