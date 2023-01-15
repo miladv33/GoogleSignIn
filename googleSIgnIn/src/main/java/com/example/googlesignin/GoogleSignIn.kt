@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.content.IntentSender
 import com.example.googlesignin.listener.ISignInResult
+import com.example.googlesignin.models.SignInRequirements
 import com.example.googlesignin.models.SignInResult
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.BeginSignInResult
@@ -12,6 +13,7 @@ import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.CommonStatusCodes
 
+
 class GoogleSignIn constructor(
     val activiy: Activity,
     val googleClientId: String,
@@ -19,35 +21,39 @@ class GoogleSignIn constructor(
 ) {
 
     private val REQ_ONE_TAP: Int = 100
-    private var oneTapClient: SignInClient? = null
-    private var signInRequest: BeginSignInRequest? = null
+    private val signInRequirements: SignInRequirements? = null
 
-    fun init() {
-        oneTapClient = Identity.getSignInClient(activiy)
-        signInRequest = BeginSignInRequest.builder()
-            .setPasswordRequestOptions(
-                BeginSignInRequest.PasswordRequestOptions.builder()
-                    .setSupported(true)
-                    .build()
-            )
-            .setGoogleIdTokenRequestOptions(
-                BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
-                    .setSupported(true)
-                    // Your server's client ID, not your Android client ID.
-                    .setServerClientId(googleClientId)
-                    // Only show accounts previously used to sign in.
-                    .setFilterByAuthorizedAccounts(false)
-                    .build()
-            )
-            // Automatically sign in when exactly one credential is retrieved.
-            .setAutoSelectEnabled(true)
-            .build()
+    init {
+        initilize(signInRequirements?.getSignRequirements())
     }
 
+    fun initilize(signInRequirements: SignInRequirements?) {
+        signInRequirements?.let {
+            signInRequirements.oneTapClient = Identity.getSignInClient(activiy)
+            signInRequirements.signInRequest = signInRequirements.BeginSignInRequest
+                ?.setPasswordRequestOptions(
+                    BeginSignInRequest.PasswordRequestOptions.builder()
+                        .setSupported(true)
+                        .build()
+                )
+                ?.setGoogleIdTokenRequestOptions(
+                    BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+                        .setSupported(true)
+                        // Your server's client ID, not your Android client ID.
+                        .setServerClientId(googleClientId)
+                        // Only show accounts previously used to sign in.
+                        .setFilterByAuthorizedAccounts(false)
+                        .build()
+                )
+                // Automatically sign in when exactly one credential is retrieved.
+                ?.setAutoSelectEnabled(true)
+                ?.build()
+        }
+    }
 
     fun signIn() {
-        signInRequest?.let { signInRequest ->
-            oneTapClient?.beginSignIn(signInRequest)
+        signInRequirements?.signInRequest?.let { signInRequest ->
+            signInRequirements.oneTapClient?.beginSignIn(signInRequest)
                 ?.addOnSuccessListener(activiy) { result ->
                     onSuccessToShowGoogleSignIn(result, activiy)
                 }
@@ -84,9 +90,10 @@ class GoogleSignIn constructor(
         }
     }
 
+
     fun parseActivityResult(data: Intent?) {
         try {
-            setResult(getCredential(oneTapClient, data))
+            setResult(getCredential(signInRequirements?.oneTapClient, data))
         } catch (e: ApiException) {
             when (e.statusCode) {
                 CommonStatusCodes.CANCELED -> {

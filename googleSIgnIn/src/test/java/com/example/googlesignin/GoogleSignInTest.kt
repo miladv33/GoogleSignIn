@@ -4,16 +4,14 @@ import android.app.Activity
 import android.content.Intent
 import android.content.IntentSender
 import com.example.googlesignin.listener.ISignInResult
+import com.example.googlesignin.models.SignInRequirements
 import com.example.googlesignin.models.SignInResult
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.BeginSignInResult
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.Status
-import io.mockk.coVerify
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.spyk
+import io.mockk.*
 import org.junit.Before
 import org.junit.Test
 
@@ -28,6 +26,8 @@ class GoogleSignInTest {
     lateinit var signInResult: SignInResult
     lateinit var signInRequest: BeginSignInRequest
     lateinit var result: BeginSignInResult
+    lateinit var signInRequirements: SignInRequirements
+
     @Before
     fun before() {
         activiy = mockk()
@@ -36,7 +36,12 @@ class GoogleSignInTest {
         oneTapClient = mockk()
         signInRequest = mockk()
         result = mockk()
+        mockkConstructor(SignInRequirements::class)
+        val signInRequirements = mockk<SignInRequirements>()
+        every { anyConstructed<SignInRequirements>().getSignRequirements() } returns signInRequirements
+
         googleSignIn = GoogleSignIn(activiy, "", inResult)
+
         signInResult = SignInResult(
             "", "Milad", "",
             mockk(),  "Milad Varvaei", "Varvaei", "Milad", "+980000000"
