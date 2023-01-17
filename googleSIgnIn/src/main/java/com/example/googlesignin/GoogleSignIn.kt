@@ -14,6 +14,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.CommonStatusCodes
 
 
+@Deprecated("")
 class GoogleSignIn constructor(
     val activiy: Activity,
     val googleClientId: String,
