@@ -1,5 +1,6 @@
 package com.example.googlesignin.newSDK
 
+import GoogleSignInClient
 import android.app.Activity
 import android.content.Intent
 import com.example.googlesignin.listener.ISignInResult
@@ -25,6 +26,7 @@ class GoogleSignIn constructor(
         GoogleSignInClient(activity, googleSignInRequest, iSignInResult, REQ_ONE_TAP)
     private var googleSignInResult: GoogleSignInResult =
         GoogleSignInResult(iSignInResult, activity, REQ_ONE_TAP)
+    private var tokenManager = TokenManager()
 
     fun signIn() {
         googleSignInClient.signIn()
@@ -34,4 +36,8 @@ class GoogleSignIn constructor(
     fun onActivityResult(data: Intent?) {
         googleSignInResult.parseActivityResult(REQ_ONE_TAP, data)
     }
+    fun isTokenExpired(token: String?): Boolean {
+        return tokenManager.isTokenExpired(token)
+    }
+
 }
