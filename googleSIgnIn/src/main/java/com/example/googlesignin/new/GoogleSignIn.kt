@@ -3,6 +3,7 @@ package com.example.googlesignin.new
 import android.app.Activity
 import android.content.Intent
 import com.example.googlesignin.listener.ISignInResult
+import com.example.googlesignin.newSDK.GoogleSignInRequest
 
 /**
  *  this class will handle the initialization of the SignInRequirements,

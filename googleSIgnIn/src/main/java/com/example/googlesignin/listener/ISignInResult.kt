@@ -2,6 +2,7 @@ package com.example.googlesignin.listener
 
 import com.example.googlesignin.models.SignInResult
 
+
 interface ISignInResult {
     fun onGetTheSignInResult(signInResult: SignInResult?)
 

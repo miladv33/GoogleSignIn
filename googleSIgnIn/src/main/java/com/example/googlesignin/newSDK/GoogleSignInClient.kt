@@ -1,11 +1,20 @@
+package com.example.googlesignin.newSDK
+
 import android.app.Activity
 import android.content.IntentSender
 import com.example.googlesignin.listener.ISignInResult
-import com.example.googlesignin.new.GoogleSignInRequest
 import com.google.android.gms.auth.api.identity.BeginSignInResult
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
 
+/**
+ * This class will handle the SignInClient and begin the sign-in process.
+ * @property activity
+ * @property googleSignInRequest
+ * @property iSignInResult
+ * @property REQ_ONE_TAP
+ * @constructor Create empty Google sign in client
+ */
 class GoogleSignInClient constructor(
     private val activity: Activity,
     private val googleSignInRequest: GoogleSignInRequest,
@@ -31,11 +40,15 @@ class GoogleSignInClient constructor(
         }
     }
 
-    private fun onSuccessToShowGoogleSignIn(result: Any?, activity: Activity) {
-        if (result is IntentSender.SendIntentException) {
-            iSignInResult.onGotAnException(result)
-        } else {
-            signIn()
+    fun silentSignIn(signInResult: (String?) -> Unit) {
+
+    }
+
+    private fun onSuccessToShowGoogleSignIn(result: BeginSignInResult, activity: Activity) {
+        try {
+            startIntent(activity, result)
+        } catch (e: IntentSender.SendIntentException) {
+            iSignInResult.onGotAnException(e)
         }
     }
 

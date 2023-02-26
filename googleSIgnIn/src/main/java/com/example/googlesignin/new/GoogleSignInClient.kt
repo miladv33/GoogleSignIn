@@ -16,7 +16,7 @@ import com.google.android.gms.auth.api.identity.SignInClient
  * @property REQ_ONE_TAP
  * @constructor Create empty Google sign in client
  */
-class GoogleSignInClient(
+class GoogleSignInClient constructor(
     private val activity: Activity,
     private val googleSignInRequest: GoogleSignInRequest,
     var iSignInResult: ISignInResult,
