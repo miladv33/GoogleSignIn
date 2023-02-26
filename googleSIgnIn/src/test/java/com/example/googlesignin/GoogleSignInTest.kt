@@ -1,53 +1,37 @@
 package com.example.googlesignin
 
-import android.app.Activity
-import android.content.Intent
-import android.content.IntentSender
-import com.example.googlesignin.listener.ISignInResult
-import com.example.googlesignin.models.SignInRequirements
-import com.example.googlesignin.models.SignInResult
-import com.example.googlesignin.newSDK.GoogleSignIn
-import com.google.android.gms.auth.api.identity.BeginSignInRequest
-import com.google.android.gms.auth.api.identity.BeginSignInResult
-import com.google.android.gms.auth.api.identity.SignInClient
-import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.common.api.Status
-import io.mockk.*
-import org.junit.Before
-import org.junit.Test
-
 class GoogleSignInTest {
 
-    @io.mockk.impl.annotations.MockK
-    lateinit var googleSignIn: GoogleSignIn
-    lateinit var inResult: ISignInResult
-    lateinit var activiy: Activity
-    lateinit var data: Intent
-    lateinit var oneTapClient: SignInClient
-    lateinit var signInResult: SignInResult
-    lateinit var signInRequest: BeginSignInRequest
-    lateinit var result: BeginSignInResult
-    lateinit var signInRequirements: SignInRequirements
+//    @io.mockk.impl.annotations.MockK
+//    lateinit var googleSignIn: GoogleSignIn
+//    lateinit var inResult: ISignInResult
+//    lateinit var activiy: Activity
+//    lateinit var data: Intent
+//    lateinit var oneTapClient: SignInClient
+//    lateinit var signInResult: SignInResult
+//    lateinit var signInRequest: BeginSignInRequest
+//    lateinit var result: BeginSignInResult
+//    lateinit var signInRequirements: SignInRequirements
 
-    @Before
-    fun before() {
-        activiy = mockk()
-        inResult = spyk()
-        data = mockk()
-        oneTapClient = mockk()
-        signInRequest = mockk()
-        result = mockk()
-        mockkConstructor(SignInRequirements::class)
-        val signInRequirements = mockk<SignInRequirements>()
-        every { anyConstructed<SignInRequirements>().getSignRequirements() } returns signInRequirements
-
-        googleSignIn = GoogleSignIn(activiy, "", inResult)
-
-        signInResult = SignInResult(
-            "", "Milad", "",
-            mockk(),  "Milad Varvaei", "Varvaei", "Milad", "+980000000"
-        )
-    }
+//    @Before
+//    fun before() {
+//        activiy = mockk()
+//        inResult = spyk()
+//        data = mockk()
+//        oneTapClient = mockk()
+//        signInRequest = mockk()
+//        result = mockk()
+//        mockkConstructor(SignInRequirements::class)
+//        val signInRequirements = mockk<SignInRequirements>()
+//        every { anyConstructed<SignInRequirements>().getSignRequirements() } returns signInRequirements
+//
+//        googleSignIn = GoogleSignIn(activiy, "", inResult)
+//
+//        signInResult = SignInResult(
+//            "", "Milad", "",
+//            mockk(),  "Milad Varvaei", "Varvaei", "Milad", "+980000000"
+//        )
+//    }
 
 //    @Test
 //    fun `return result`() {
