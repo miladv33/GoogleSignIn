@@ -1,9 +1,8 @@
-package com.example.googlesignin.newSDK
+package com.example.googlesignin.new
 
 import android.app.Activity
 import android.content.Intent
 import com.example.googlesignin.listener.ISignInResult
-import com.example.googlesignin.new.GoogleSignInClient
 
 /**
  *  this class will handle the initialization of the SignInRequirements,
@@ -30,7 +29,6 @@ class GoogleSignIn constructor(
     fun signIn() {
         googleSignInClient.signIn()
     }
-
 
     fun onActivityResult(data: Intent?) {
         googleSignInResult.parseActivityResult(REQ_ONE_TAP, data)
