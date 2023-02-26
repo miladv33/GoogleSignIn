@@ -15,5 +15,4 @@ class TokenManger(){
         val currentTime = System.currentTimeMillis() / 1000
         return currentTime > exp
     }
-
 }
